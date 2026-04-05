@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MULTI AVG DAILY RANGES - NinjaTrader 8</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+      line-height:1.6;
+      color:#e0e0e0;
+      background:#0a0a0a;
+    }
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+    /* Header */
+    header{
+      background:#000;
+      padding:18px 0;
+      border-bottom:2px solid #00ff00;
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-height:56px;
+    }
+    .brand img{
+      height:38px;
+      width:auto;
+      object-fit:contain;
+      display:block;
+    }
+    .brand h1{
+      color:#00ff00;
+      font-size:1.5rem;
+      line-height:1.2;
+      letter-spacing:.2px;
+    }
+
+    /* Hero */
+    .hero{
+      background:linear-gradient(135deg,#000 0%,#1a1a1a 100%);
+      padding:80px 0;
+      text-align:center;
+      border-bottom:3px solid #00ff00;
+    }
+    .hero h2{
+      font-size:2.8rem;
+      color:#00ff00;
+      margin-bottom:18px;
+      text-shadow:0 0 20px rgba(0,255,0,.5);
+    }
+    .hero p{
+      font-size:1.25rem;
+      color:#b0b0b0;
+      margin:0 auto 28px auto;
+      max-width:980px;
+    }
+    .cta-button{
+      display:inline-block;
+      background:#00ff00;
+      color:#000;
+      padding:15px 40px;
+      text-decoration:none;
+      border-radius:5px;
+      font-weight:800;
+      font-size:1.05rem;
+      transition:all .3s;
+      border:2px solid #00ff00;
+    }
+    .cta-button:hover{
+      background:#000;
+      color:#00ff00;
+      transform:translateY(-2px);
+      box-shadow:0 5px 20px rgba(0,255,0,.4);
+    }
+
+    /* Sections */
+    .section-title{
+      text-align:center;
+      font-size:2.2rem;
+      color:#00ff00;
+      margin-bottom:50px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+    }
+
+    /* Features */
+    .features{padding:60px 0;background:#0f0f0f}
+    .feature-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:30px;
+    }
+    .feature-card{
+      background:#1a1a1a;
+      padding:30px;
+      border-radius:8px;
+      border:1px solid #333;
+      transition:all .3s;
+    }
+    .feature-card:hover{
+      border-color:#00ff00;
+      box-shadow:0 5px 20px rgba(0,255,0,.2);
+      transform:translateY(-5px);
+    }
+    .feature-card h3{color:#00ff00;margin-bottom:15px;font-size:1.35rem}
+    .feature-card p{color:#b0b0b0;line-height:1.8}
+    code{color:#b8ffb8}
+
+    /* Screenshots */
+    .screenshots{padding:60px 0;background:#000}
+    .screenshot-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+      gap:30px;
+      margin-top:40px;
+    }
+    .screenshot-item{
+      background:#1a1a1a;
+      padding:20px;
+      border-radius:8px;
+      border:1px solid #333;
+      transition:all .3s;
+    }
+    .screenshot-item:hover{
+      border-color:#00ff00;
+      box-shadow:0 5px 20px rgba(0,255,0,.3);
+    }
+    .screenshot-item img{
+      width:100%;
+      border-radius:6px;
+      margin-bottom:14px;
+      display:block;
+    }
+    .screenshot-item h3{color:#00ff00;text-align:center;font-size:1.15rem}
+    .screenshot-item p{color:#9a9a9a;text-align:center;margin-top:6px;font-size:.95rem}
+
+    /* How It Works */
+    .how-it-works{padding:60px 0;background:#0f0f0f}
+    .steps{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:30px;
+      margin-top:40px;
+    }
+    .step{
+      background:#1a1a1a;
+      padding:30px;
+      border-radius:8px;
+      border-left:4px solid #00ff00;
+      transition:all .3s;
+    }
+    .step:hover{background:#222;transform:translateX(5px)}
+    .step-number{
+      display:inline-block;
+      background:#00ff00;
+      color:#000;
+      width:40px;height:40px;
+      border-radius:50%;
+      text-align:center;
+      line-height:40px;
+      font-weight:800;
+      font-size:1.2rem;
+      margin-bottom:15px;
+    }
+    .step h3{color:#00ff00;margin-bottom:10px}
+    .step p{color:#b0b0b0}
+
+    /* Settings */
+    .settings{padding:60px 0;background:#000}
+    .settings-table{
+      width:100%;
+      margin-top:30px;
+      border-collapse:collapse;
+      background:#1a1a1a;
+      border-radius:8px;
+      overflow:hidden;
+    }
+    .settings-table th{
+      background:#00ff00;
+      color:#000;
+      padding:15px;
+      text-align:left;
+      font-weight:800;
+    }
+    .settings-table td{
+      padding:15px;
+      border-bottom:1px solid #333;
+      color:#b0b0b0;
+      vertical-align:top;
+    }
+    .settings-table tr:hover{background:#222}
+
+    /* FAQ */
+    .faq{padding:60px 0;background:#0f0f0f}
+    .faq-item{
+      background:#1a1a1a;
+      padding:25px;
+      margin-bottom:20px;
+      border-radius:8px;
+      border-left:4px solid #00ff00;
+    }
+    .faq-item h3{color:#00ff00;margin-bottom:10px;font-size:1.15rem}
+    .faq-item p{color:#b0b0b0;line-height:1.8}
+
+    /* Footer */
+    footer{
+      background:#000;
+      padding:40px 0;
+      text-align:center;
+      border-top:2px solid #00ff00;
+    }
+    footer p{color:#666;margin-bottom:10px}
+    footer a{color:#00ff00;text-decoration:none}
+    footer a:hover{text-decoration:underline}
+
+    /* Responsive */
+    @media (max-width:768px){
+      .hero h2{font-size:2rem}
+      .hero p{font-size:1.1rem}
+      .screenshot-grid{grid-template-columns:1fr}
+      .settings-table{font-size:.92rem}
+      .brand img{height:34px}
+      .brand h1{font-size:1.35rem}
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="brand">
+        <img src="https://cdn.abacus.ai/images/83ec102b-0d5d-430b-9072-4d6e9df0a1e9.png" alt="Logo" />
+        <h1>MULTI AVG DAILY RANGES</h1>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h2>Know Your Daily Range — At a Glance, Draggable, Points or Ticks</h2>
+      <p>
+        MQT_AvgDailyRange displays the average daily range (High - Low) for up to four configurable periods
+        in a simple on-chart panel. Choose to display values in <strong>Points</strong> or <strong>Ticks</strong>,
+        toggle individual periods on/off, and drag the panel to the corner you prefer (with optional snap-to-corner).
+        Built for NinjaTrader 8 with a lightweight, clean display that stays out of your way.
+      </p>
+      <a class="cta-button" href="#" onclick="alert('Add your download/checkout URL here'); return false;">Download Now</a>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">Key Features</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>Up to 4 ADR Periods</h3>
+          <p>
+            Track multiple lookback windows (e.g., 5 / 10 / 20 / 50) to understand short-, mid-, and longer-term range behavior.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Points or Ticks Display</h3>
+          <p>
+            Choose <code>DisplayUnits</code> = <strong>Points</strong> or <strong>Ticks</strong>. The indicator formats values appropriately
+            using the instrument’s <code>TickSize</code>.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Show/Hide Each Period</h3>
+          <p>
+            Toggle <code>ShowPeriod1</code>…<code>ShowPeriod4</code> to keep the panel minimal and focused on what you actually use.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Draggable Panel (Corner Anchored)</h3>
+          <p>
+            Drag the panel between corners by clicking the display block. Use <code>SnapToCorner</code> for quick placement.
+            Use <code>LockPanel</code> to prevent accidental movement.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Simple, Lightweight Overlay</h3>
+          <p>
+            Designed as a clean overlay panel on the price chart (no plots required). Great for discretionary trading and daily prep.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>NT8.1.6.3 Compatible Enum Fix</h3>
+          <p>
+            Includes a namespace-safe enum placement so the generated wrappers for Indicators/Strategies/Market Analyzer can resolve
+            <code>AvgDisplayUnit</code> reliably.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots -->
+  <section class="screenshots">
+    <div class="container">
+      <h2 class="section-title">Chart Examples</h2>
+
+      <div class="screenshot-grid">
+        <div class="screenshot-item">
+          <img src="https://cdn.abacus.ai/images/05f49a34-64da-4ed3-a2ee-05b1e0104e22.png" alt="Average Daily Range panel showing values in points" />
+          <h3>Points Mode</h3>
+          <p>Panel display with ADR values shown in points</p>
+        </div>
+
+        <div class="screenshot-item">
+          <img src="https://cdn.abacus.ai/images/cfe93c92-e9c5-41a6-9987-b6fe133878bc.png" alt="Average Daily Range panel showing values in ticks" />
+          <h3>Ticks Mode</h3>
+          <p>Same panel display with ADR values shown in ticks</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Compute Daily Range</h3>
+          <p>
+            On each bar close, the indicator calculates the daily range as <code>High - Low</code> and adds it to rolling sums for each enabled period.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Maintain Rolling Averages</h3>
+          <p>
+            Each period keeps a rolling sum and bar count, trimming older contributions once the count exceeds the period length.
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Format in Points or Ticks</h3>
+          <p>
+            Set <code>DisplayUnits</code> to Points (formatted with decimals) or Ticks (converted using <code>TickSize</code> and formatted as whole ticks).
+          </p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Draw the Panel (Draggable)</h3>
+          <p>
+            The ADR panel is rendered using <code>Draw.TextFixed</code>. Optional mouse handlers let you drag it to the nearest corner,
+            or lock it in place.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Settings -->
+  <section class="settings">
+    <div class="container">
+      <h2 class="section-title">Indicator Settings</h2>
+      <table class="settings-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Description</th>
+            <th>Default</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Periods -->
+          <tr>
+            <td><strong>Period1</strong></td>
+            <td>Lookback length for ADR 1.</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td><strong>Period2</strong></td>
+            <td>Lookback length for ADR 2.</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td><strong>Period3</strong></td>
+            <td>Lookback length for ADR 3.</td>
+            <td>20</td>
+          </tr>
+          <tr>
+            <td><strong>Period4</strong></td>
+            <td>Lookback length for ADR 4.</td>
+            <td>50</td>
+          </tr>
+
+          <!-- Display toggles -->
+          <tr>
+            <td><strong>ShowPeriod1</strong></td>
+            <td>Show ADR 1 line in the panel.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>ShowPeriod2</strong></td>
+            <td>Show ADR 2 line in the panel.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>ShowPeriod3</strong></td>
+            <td>Show ADR 3 line in the panel.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>ShowPeriod4</strong></td>
+            <td>Show ADR 4 line in the panel.</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td><strong>DisplayUnits</strong></td>
+            <td>Show averages in <strong>Points</strong> or <strong>Ticks</strong>.</td>
+            <td>Points</td>
+          </tr>
+
+          <!-- Layout -->
+          <tr>
+            <td><strong>Anchor</strong></td>
+            <td>Corner where the panel is anchored (TopLeft/TopRight/BottomLeft/BottomRight).</td>
+            <td>TopLeft</td>
+          </tr>
+          <tr>
+            <td><strong>OffsetX</strong></td>
+            <td>Horizontal offset from the anchor corner (hit-test and placement).</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td><strong>OffsetY</strong></td>
+            <td>Vertical offset from the anchor corner (hit-test and placement).</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td><strong>LockPanel</strong></td>
+            <td>Prevents moving the panel.</td>
+            <td>false</td>
+          </tr>
+          <tr>
+            <td><strong>SnapToCorner</strong></td>
+            <td>While dragging, snap the panel to the nearest corner.</td>
+            <td>true</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+
+      <div class="faq-item">
+        <h3>What does “Average Daily Range” mean in this indicator?</h3>
+        <p>
+          ADR is calculated as the average of the prior daily ranges, where each daily range is <code>High - Low</code>.
+          The indicator maintains separate rolling averages for up to four lookback periods.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I show ticks instead of points?</h3>
+        <p>
+          Yes. Set <strong>Display Units</strong> (<code>DisplayUnits</code>) to <strong>Ticks</strong>. Values will be converted using
+          the instrument’s <code>TickSize</code> and displayed as whole ticks.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I hide some of the ADR lines?</h3>
+        <p>
+          Yes. Use <code>ShowPeriod1</code> through <code>ShowPeriod4</code> to show only the periods you want.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How do I move the ADR panel?</h3>
+        <p>
+          Click and drag the panel. If <strong>Snap To Corner</strong> is enabled, it will snap to the nearest corner while dragging.
+          If the panel won’t move, check <strong>Lock Panel</strong>.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Does this plot lines on the chart?</h3>
+        <p>
+          No plots are required. The values are displayed in a fixed text panel using <code>Draw.TextFixed</code>,
+          keeping your chart clean and readable.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Will it work on intraday charts?</h3>
+        <p>
+          The indicator uses the currently loaded bar series. For best “daily range” meaning, apply it to a Daily series,
+          or ensure your data series context matches how you want to interpret “daily” range.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 myQuantrader.com - All Rights Reserved</p>
+      <p>For support, visit <a href="https://myquantrader.com">myQuantrader.com</a></p>
+    </div>
+  </footer>
+</body>
+</html>
